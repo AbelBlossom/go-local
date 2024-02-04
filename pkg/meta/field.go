@@ -1,4 +1,9 @@
-package fields
+package meta
+
+import (
+	// "github.com/AbelBlossom/go-local/pkg/meta"
+	"github.com/AbelBlossom/go-local/pkg/utils"
+)
 
 type Fielder interface {
 	// this is reposible for adding fields to the object
@@ -9,17 +14,24 @@ type Fielder interface {
 
 type Field struct {
 	// the type difinish for the field
-	Name        string `json:"name"`
-	Label       string `json:"label"`
-	Description string `json:"description"`
-	Default     string `json:"default"`
-	Required    string `json:"required"`
+	Name        string    `json:"name"`
+	Object      string    `json:"object,omitempty"`
+	Type        FieldType `json:"type"`
+	Label       string    `json:"label"`
+	Description string    `json:"description"`
+	Default     string    `json:"default"`
+	Required    bool      `json:"required"`
+	Unique      bool      `json:"unique"`
 
 	// link field options
 	ReferenceObject string `json:"ref_object"`
 	ReferenceField  string `json:"ref_field"`
 }
 
+func (Field) TableName() string {
+	return utils.FieldMetaTable
+
+}
 func (f *Field) Validate(value any) error {
 	return nil
 }

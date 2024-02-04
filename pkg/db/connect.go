@@ -1,6 +1,8 @@
 package db
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 var DB *gorm.DB
 
@@ -14,5 +16,6 @@ func ConenctDB(conn DBConenctor) error {
 		return err
 	}
 	DB = _db
+	// migrate metadata
 	return nil
 }

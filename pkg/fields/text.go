@@ -1,14 +1,18 @@
 package fields
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/AbelBlossom/go-local/pkg/meta"
+)
 
 type TextField struct {
-	*Field
+	*meta.Field
 }
 
 func NewTextField() *TextField {
 	return &TextField{
-		Field: &Field{},
+		Field: &meta.Field{},
 	}
 }
 

@@ -20,5 +20,4 @@ func (c *SqliteConenctor) Connect() (*gorm.DB, error) {
 	return gorm.Open(sqlite.Open(c.path), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
-
 }

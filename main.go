@@ -5,31 +5,34 @@ import (
 	"log"
 
 	"github.com/AbelBlossom/go-local/pkg/db"
-	"github.com/AbelBlossom/go-local/pkg/fields"
 	"github.com/AbelBlossom/go-local/pkg/inter"
-	"github.com/AbelBlossom/go-local/pkg/object"
+	"github.com/AbelBlossom/go-local/pkg/meta"
 )
 
 func main() {
 	if err := db.ConenctDB(db.NewSqlConnector("./test.db")); err != nil {
-		fmt.Println(err)
 		fmt.Println("cannot connect to db")
+		log.Fatal(err)
 	}
 
-	err := inter.CreateObejct(object.Object{
+	if err := meta.Migrate(); err != nil {
+		log.Fatal(err)
+	}
+
+	err := inter.CreateObejct(meta.Object{
 		Name: "todo",
-		Fields: []map[string]any{
+		Fields: []meta.Field{
 			{
-				"type": fields.Text,
-				"name": "content",
+				Name:     "name",
+				Label:    "Name",
+				Type:     meta.Text,
+				Required: true,
 			},
 			{
-				"type": fields.Bool,
-				"name": "is_completed",
-			},
-			{
-				"type": fields.INT,
-				"name": "likes",
+				Name:    "completed",
+				Label:   "Completed",
+				Type:    meta.Bool,
+				Default: "true",
 			},
 		},
 	})

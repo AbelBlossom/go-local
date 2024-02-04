@@ -1,9 +1,13 @@
 package fields
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/AbelBlossom/go-local/pkg/meta"
+)
 
 type IntField struct {
-	*Field
+	*meta.Field
 }
 
 func (f *IntField) AddColumn() string {
