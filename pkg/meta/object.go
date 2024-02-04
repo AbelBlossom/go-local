@@ -14,6 +14,12 @@ type Object struct {
 	Fields []Field `gorm:"-"`
 }
 
+func LeanObject(name string) *Object {
+	return &Object{
+		Name: name,
+	}
+}
+
 func (Object) TableName() string {
 	return utils.ObjectMetaTable
 }
@@ -32,4 +38,19 @@ func (o *Object) BuildQuery() (clause.Expr, error) {
 		`
 	q := gorm.Expr(fmt.Sprintf(create_template, o.Name), o.Name)
 	return q, nil
+}
+
+func (o *Object) AddFields(fields ...Field) error {
+	if len(fields) == 0 {
+		return nil
+	}
+	err := db.DB.Transaction(func(tx *gorm.DB) error {
+		for _, f := range fields {
+			if err := AddField(tx, &f, o); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	return err
 }

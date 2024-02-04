@@ -1,28 +1,28 @@
-package fields
+package meta
 
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/AbelBlossom/go-local/pkg/meta"
 )
 
-func ParseField(field meta.Field) (any, error) {
+func ParseField(field *Field) (any, error) {
 
 	switch field.Type {
-	case meta.Text:
+	case Text:
 		return parseData[TextField](field)
-	case meta.INT:
+	case INT:
 		return parseData[IntField](field)
-	case meta.Bool:
+	case Bool:
 		return parseData[BoolField](field)
+	case Link:
+		return parseData[LinkField](field)
 
 	default:
 		return nil, fmt.Errorf("invalid field type `%s`", field.Type)
 	}
 }
 
-func parseData[T any](dt meta.Field) (*T, error) {
+func parseData[T any](dt *Field) (*T, error) {
 	var val T
 	b, err := json.Marshal(dt)
 	if err != nil {
@@ -30,4 +30,17 @@ func parseData[T any](dt meta.Field) (*T, error) {
 	}
 	err = json.Unmarshal(b, &val)
 	return &val, err
+}
+
+func getType(t FieldType) string {
+	switch t {
+	case INT:
+		return "INT"
+	case Bool:
+		return "BOOL"
+	case Text:
+		return "VARCHAR(255)"
+	default:
+		return "VARCHAR(255)"
+	}
 }

@@ -6,4 +6,5 @@ const (
 	Text FieldType = "TEXT"
 	INT  FieldType = "INT"
 	Bool FieldType = "BOOL"
+	Link FieldType = "LINK"
 )

@@ -7,8 +7,9 @@ import (
 
 type Fielder interface {
 	// this is reposible for adding fields to the object
-	AddColumn() string
-	Validate(value any) error      // this is used to validate  the value before inset
+	AddColumn() (string, error)
+	Validate(value any) error // this is used to validate  the value before inset
+	ValidateField() error
 	Format(value any) (any, error) // this is used to format the value bofore inserting to the db
 }
 
@@ -36,11 +37,10 @@ func (f *Field) Validate(value any) error {
 	return nil
 }
 
-func (f *Field) Format(value any) (any, error) {
-	return value, nil
+func (f *Field) ValidateField() error {
+	return nil
 }
 
-// This must be implented by every field type
-func (*Field) GetDef() string {
-	return ""
+func (f *Field) Format(value any) (any, error) {
+	return value, nil
 }
