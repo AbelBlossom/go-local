@@ -9,7 +9,8 @@ import (
 )
 
 func main() {
-	if err := db.ConenctDB(db.NewSqlConnector("./test.db")); err != nil {
+	dbLink := "root:password@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
+	if err := db.ConenctDB(db.NewMySqlConnector(dbLink)); err != nil {
 		fmt.Println("cannot connect to db")
 		log.Fatal(err)
 	}
@@ -53,7 +54,7 @@ func main() {
 				Name:            "todo",
 				Type:            meta.Link,
 				ReferenceObject: "todo",
-				ReferenceField:  "school_id",
+				ReferenceField:  "todo_id",
 			},
 		},
 	}

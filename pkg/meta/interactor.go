@@ -17,7 +17,7 @@ func CreateObejct(obj *Object) error {
 		if err != nil {
 			return err
 		}
-		if err := tx.Exec(create_q.SQL, create_q.Vars...).Error; err != nil {
+		if err := tx.Exec(create_q.SQL).Error; err != nil {
 			return err
 		}
 
@@ -60,12 +60,8 @@ func AddField(db *gorm.DB, field *Field, object *Object) error {
 	if field.Required {
 		constraints += "NOT NULL"
 	}
-
-	if field.Unique {
-		constraints += " UNIQUE"
-	}
 	if field.Default != "" {
-		constraints += fmt.Sprintf("DEFAULT '%s'", field.Default)
+		constraints += fmt.Sprintf("DEFAULT %s", field.Default)
 	}
 
 	adder, err := fielder.AddColumn()
@@ -75,6 +71,23 @@ func AddField(db *gorm.DB, field *Field, object *Object) error {
 	if err := db.Exec(fmt.Sprintf("ALTER TABLE %s %s %s;", object.Name, adder, constraints)).Error; err != nil {
 		return err
 	}
+
+	if field.Unique {
+		if err := db.Exec(fmt.Sprintf("ALTER TABLE %s ADD UNIQUE (%s);", object.Name, field.Name)).Error; err != nil {
+			return err
+		}
+	}
+
+	if field.Type == Link {
+		if field.ReferenceField == "" {
+			field.ReferenceField = "id"
+		}
+		if err := db.Exec(fmt.Sprintf("ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s(%s);",
+			object.Name, field.Name, field.ReferenceObject, field.ReferenceField)).Error; err != nil {
+			return err
+		}
+	}
+
 	// create the field meta
 	if err := db.Create(&field).Error; err != nil {
 		return err

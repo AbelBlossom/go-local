@@ -15,10 +15,8 @@ func (f *LinkField) AddColumn() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	t := getType(field.Type)
-	return fmt.Sprintf("ADD COLUMN %s %s FOREIGN KEY REFERENCES %s(%s)",
-		f.Name, t, f.ReferenceObject, f.ReferenceField), nil
+	return fmt.Sprintf("ADD COLUMN %s %s", f.Name, t), nil
 }
 
 func (f *LinkField) ValidateField() error {
